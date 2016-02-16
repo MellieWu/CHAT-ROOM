@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+	 <title>FSE Chat Room</title>
+	  <style type>
+
+
+	  * { margin: 10px;  box-sizing: border-box; }
+	        body { font: 17px Helvetica, Arial; }
+	        form {  position: fixed; bottom: 0; width: 100%; }
+	        form input { 
+				width:80%;
+				height:100px;
+			    position: fixed;
+			    bottom: 40px;
+				background:lightblue;
+		 
+	  	  }
+	        form button { 
+				width:30%;
+				height:30px;
+		        background-color: #00e0ee ;
+			    position: fixed;
+			    bottom: 0;
+				 text-align: center;
+			}
+	       #messages { list-style-type: none;}
+	       #messages li { 
+			   list-style-type: none;
+			   width:90%;
+			   padding-top: 5px; 
+			   padding-right: 5px;
+			   padding-left: 5px;
+			   padding-bottom: 5px;
+	  		   margin-bottom:1px;
+		   background: lightgrey;}
+	  
+     
+	 
+	  </style>
+	  
+  </head>
+  
+  <body>
+    <ul id="messages"></ul>
+	
+    <form action ="">
+      <input id="chat_room" autocomplete="off" />
+	  <button >Post</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var client = io();
+      $('form').submit(function(){
+		var message = $('#chat_room').val();
+        client.emit('chat message',message);
+	    $('#chat_room').val('');
+	    return false;
+      });
+	
+	  client.on('connect',function(msg){
+		nickname = prompt("what is your nickname");
+		client.emit('join',nickname);
+	  });
+	//Notify the server that there is a new message
+      client.on('chat message', function(msg){
+    	$('#messages').append($('<li>').text(msg));
+      });z
+    </script>
+  
+  </body>
+</html>	 
